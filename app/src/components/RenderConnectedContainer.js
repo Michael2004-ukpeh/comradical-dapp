@@ -1,7 +1,7 @@
 import React ,{useState} from 'react'
 import {Program, web3} from '@project-serum/anchor'
-import { LAMPORTS_PER_SOL, SystemProgram, PublicKey } from '@solana/web3.js';
-const{Transaction } = web3;
+import { SystemProgram, PublicKey } from '@solana/web3.js';
+const{Transaction , LAMPORTS_PER_SOL} = web3;
 
 
 
@@ -78,11 +78,12 @@ const RenderConnectedContainer = ({walletAddress,gifList, setGifList, createGifA
        return transaction
    }
    const createTransferTransaction = async(from, to, amount) =>{
+       console.log(amount)
        return createTransaction(
            SystemProgram.transfer({
               fromPubkey:from,
               toPubkey:to,
-              amount: LAMPORTS_PER_SOL * amount, 
+              amount: Number(amount)* LAMPORTS_PER_SOL, 
            })
        )
    }
