@@ -152,22 +152,22 @@ footer {
 
 .gif-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     grid-gap: 1.5rem;
     justify-items: center;
-    margin: 0;
-    padding: 0;
+    margin: 1rem;
+    padding: 1rem;
 }
 
-@media (max-width:567px) {
+@media (max-width:800px) {
     .gif-grid {
         display: flex;
         flex-flow: row wrap;
         gap: 1.5rem;
         justify-items: center;
         align-items: center;
-        margin: 0;
-        padding: 0;
+        margin: 1rem;
+        padding: 1rem;
     }
 }
 

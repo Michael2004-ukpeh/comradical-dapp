@@ -89,7 +89,7 @@ const getProvider = () =>{
   const provider = new Provider(
    connection, window.solana, opts.prefLightCommitment,
   );
-  console.log(provider);
+
   return provider;
 }
 

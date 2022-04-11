@@ -18,33 +18,33 @@ const RenderConnectedContainer = ({walletAddress,gifList, setGifList, createGifA
         }
         
             console.log("Gif Link: ", inputValue)
-            // gifList.forEach(gif =>{
-            //   if (gif !== inputValue){
-            //     setGifList([...gifList,inputValue]);
-            //   }else{
-            //       setDuplicate(true)
-            //       setGifList(gifList)
-            //       setTimeout(() => setDuplicate(false),2000)
-            //   }
-            // })
-        try {
-            const provider = await getProvider();
-            const program = new Program(idl, programID, provider);
-            await program.rpc.addGif(inputValue,{
-                accounts: {
-                    baseAccount: baseAccount.publicKey,
-                    user: provider.wallet.publicKey,
-                    systemProgram: SystemProgram.programId,
-    
-                },
-                signers: [baseAccount]
-            });
-            console.log("GIF succesfully sent to the program", inputValue)
-            setInputValue('')
-            await getGifList()
-        } catch (error) {
-            console.log("Error sending GIF:", error)
-        }
+            gifList.forEach(async(gif) =>{
+              if (gif !== inputValue) {
+                try {
+                    const provider = await getProvider();
+                    const program = new Program(idl, programID, provider);
+                    await program.rpc.addGif(inputValue,{
+                        accounts: {
+                            baseAccount: baseAccount.publicKey,
+                            user: provider.wallet.publicKey,
+                            
+            
+                        },
+                        
+                    });
+                    console.log("GIF succesfully sent to the program", inputValue)
+                    setInputValue('')
+                    await getGifList()
+                } catch (error) {
+                    console.log("Error sending GIF:", error)
+                }
+              }else{
+                  setDuplicate(true)
+                  setGifList(gifList)
+                  setTimeout(() => setDuplicate(false),2000)
+              }
+            })
+      
        
     }
     const onSubmit = e => {
@@ -87,6 +87,8 @@ const RenderConnectedContainer = ({walletAddress,gifList, setGifList, createGifA
        )
    }
    const tipSol = async(from, to ,amount) =>{
+       console.log(from)
+       console.log(to)
        const provider =   getProvider();
        try {
            console.log(`Sending ${amount} from :${from} , to: ${to}`);
@@ -95,13 +97,14 @@ const RenderConnectedContainer = ({walletAddress,gifList, setGifList, createGifA
            console.log(`Submitted Transaction ${signature}, awaiting confirmation`);
             const tx = await getProvider().connection.confirmTransaction(signature);
             console.log(`Transaction ${signature} confirmed`);
-            setTip(0);
+           
             return tx
            
        } catch (error) {
         console.warn(error);
         console.error(`Error: ${JSON.stringify(error)}`);  
        }
+       
    }
    if(gifList === null){
        return(
@@ -124,13 +127,13 @@ const RenderConnectedContainer = ({walletAddress,gifList, setGifList, createGifA
            {duplicate && <h4 className='duplicate'>Oops Enter A New Meme!, Don't be weak</h4>}
            <div className="gif-grid">
                 {gifList.slice(0).reverse().map((item, index) =>(
-
+                  
                     <div className="gif-item" key={index}>
-                        <img src={item.gifLink} alt={item.gifLink} height='300' width='200'/>
+                        <img src={item.gifLink} alt={item.gifLink} height='200' width='200'/>
                         <p> {item.userAddress.toString()}</p>
                         <button onClick={() => upVoteGif(item.id)}>Upvote {item.upvotes.toString()}</button>
                         <div className='tip-box'> 
-                            <button onClick={() => tipSol(walletAddress, item.userAddress.toString(), tip)}>Send tip to our comrade</button>
+                            <button onClick={() => tipSol(getProvider().wallet.publicKey, item.userAddress, tip)}>Send tip to our comrade</button>
                             <input 
                             type="number" 
                             name="tip"
